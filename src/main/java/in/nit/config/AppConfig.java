@@ -15,14 +15,17 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableTransactionManagement
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
 @ComponentScan("in.nit")
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
 	@Autowired
 	private Environment env;
 	
@@ -77,8 +80,18 @@ public class AppConfig {
 		return v;
 	}
 	
-	
-	
+	//6.activate cmf
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+		return new CommonsMultipartResolver();
+	}
+	//resources folder
+//	@Bean
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**")
+		.addResourceLocations("/resources/");
+		
+	}
 
 }
 

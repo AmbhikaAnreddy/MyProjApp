@@ -1,7 +1,10 @@
 package in.nit.controller;
 
 
+import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import in.nit.model.ShipmentType;
 import in.nit.service.IShipmentTypeService;
+import in.nit.util.ShipmentTypeUtil;
 import in.nit.view.ShipmentTypeExcelView;
 import in.nit.view.ShipmentTypePdfView;
 
@@ -22,6 +26,10 @@ import in.nit.view.ShipmentTypePdfView;
 public class ShipmentTypeController {
 	@Autowired
 	private IShipmentTypeService service;
+	@Autowired
+	private ServletContext context;
+	@Autowired
+	private ShipmentTypeUtil util;
 	@RequestMapping("/register")
 	public String showRegPage(Model model) {
 		model.addAttribute("ShipmentType",new ShipmentType());
@@ -74,21 +82,44 @@ public class ShipmentTypeController {
 		
 	}
 	@RequestMapping("/excel")
-	public ModelAndView showExcel() {
+	public ModelAndView showExcel(@RequestParam(value="id",required=false)Integer id) {
 		ModelAndView m=new ModelAndView();
 		m.setView(new ShipmentTypeExcelView());
-		//fetching data from db
-		List<ShipmentType> list=service.getAllShipmentTypes();
-		m.addObject("list",list);
+		if(id==null) {
+			//export all rows
+			List<ShipmentType> list=service.getAllShipmentTypes();
+			m.addObject("list",list);
+		}
+		else {
+			//export one row by id
+			ShipmentType st=service.getOneShipmentType(id);
+			m.addObject("list",Arrays.asList(st));
+		}
 		return m;
+		
 	}
 	@RequestMapping("/pdf")
-	public ModelAndView showPdf() {
+	public ModelAndView showPdf(@RequestParam(value="id",required=false)Integer id) {
 		ModelAndView m=new ModelAndView();
 		m.setView(new ShipmentTypePdfView());
-		List<ShipmentType> list=service.getAllShipmentTypes();
-		//send data to pdf file
-		m.addObject("list",list);
-		return m;
+        if(id==null) {
+        	List<ShipmentType> list=service.getAllShipmentTypes();
+        	m.addObject("list",list);
+        }
+        else {
+        	//show one row 
+			ShipmentType st=service.getOneShipmentType(id);
+			m.addObject("list",Arrays.asList(st));
+
+        }
+        return m;
+	}
+	@RequestMapping("/charts")
+	public String showCharts() {
+		List<Object[]> list=service.getShipmentModeCount();
+		String path=context.getRealPath("/");
+		util.generatePie(path, list);
+		util.generateBar(path, list);
+		return "ShipmentTypeCharts";
 	}
 }

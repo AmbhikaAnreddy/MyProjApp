@@ -27,7 +27,7 @@
       <td>${ob.shipGrad}</td>
       <td>${ob.shipDesc}</td>
       <td>
-      <a href="delete?sid=${ob.shipId}">DELETE</a>
+     <a href="delete?sid=${ob.shipId}">DELETE</a>
       </td>
       <td>
       <a href="view?sid=${ob.shipId}">VIEW</a>

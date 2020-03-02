@@ -40,6 +40,12 @@ public class OrderMethod {
 	public OrderMethod() {
 		super();
 	}
+	
+	public OrderMethod(Integer orderId) {
+		super();
+		this.orderId = orderId;
+	}
+
 	public Integer getOrderId() {
 		return orderId;
 	}

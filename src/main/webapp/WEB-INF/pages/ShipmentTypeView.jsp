@@ -3,6 +3,9 @@
 <html>
 <body>
 <h3>welcome to shipment type view page</h3>
+<a href="excel?id=${ob.shipId}">Excel Export</a>
+<a href="pdf?id=${ob.shipId}">Pdf Export</a>
+
 <table border="1">
  <tr>
  <th>ID</th> <td>${ob.shipId}</td>

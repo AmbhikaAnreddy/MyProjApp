@@ -10,4 +10,5 @@ public interface IShipmentTypeDao {
     public void deleteShipmentType(Integer id);
     public ShipmentType getOneShipmentType(Integer id);
     public void updateShipmentType(ShipmentType ob);
+    public List<Object[]> getShipmentModeCount();
 }
